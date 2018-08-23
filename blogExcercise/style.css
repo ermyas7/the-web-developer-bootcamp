@@ -1,7 +1,8 @@
 .container{
-	width: 60%;
-	margin: 0 auto;
-	border: 15px #bdc3c7 solid;
+	max-width: 700px;
+	width: 80%;
+	margin: 20px auto;
+	border: 20px #bdc3c7 solid;
 	font-family: font-family: 'Source Sans Pro', sans-serif;
 }
 
@@ -11,16 +12,18 @@
 
 h3{
 	color: #3498db;
-	word-spacing: 0.5em;
+	word-spacing: 0.5rem;
 	text-transform: uppercase;
-	letter-spacing: 2px;
+	letter-spacing: 0.2rem;
 }
 h2{
 	color: #2c3e50;
 	font-weight: 700;
+	font-size: 2.0rem;
 }
 .first{
 	border-left: 5px #bdc3c7 solid;
+	padding-left: 5px;
 }
 hr {
     border: 0;
