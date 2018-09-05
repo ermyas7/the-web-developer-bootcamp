@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>javascript</title>
+	<style>
+		.color{
+			background-color: purple;
+		}
+		.container{
+			height: 200px;
+			padding: 10px;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<button>CLICK ME</button>
+	</div>	
+</body>
+<script>
+	var div = document.querySelector(".container");
+	document.querySelector("button").addEventListener("click", function(){
+		div.classList.toggle('color');
+	})
+</script>
+</html>

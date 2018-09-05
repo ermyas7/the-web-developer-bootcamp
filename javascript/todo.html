@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Todo List</title>
+	<style>
+		.over{
+			color: blue;
+		}
+		.out{
+			color: black;
+		}
+		.done{
+			text-decoration: line-through;
+		}
+	</style>
+</head>
+<body>
+	<h1>My todo list</h1>
+	<ul>
+		<li>Take shower</li>
+		<li>Meditate</li>
+		<li>Eat break fast</li>
+		<li>Study networking</li>
+		<li>Go to class</li>
+		<li>Code</li>
+	</ul>
+	<script>
+		var lis = document.querySelectorAll("li");
+		lis.forEach(function(list){
+
+			list.addEventListener("mouseover", function(){
+			this.classList.add("over");
+			});
+			list.addEventListener("mouseout", function(){
+			this.classList.add("out");
+			});
+			list.addEventListener("click", function(){
+			this.classList.toggle("done");
+			});
+		});
+		
+
+	</script>
+</body>
+</html>
