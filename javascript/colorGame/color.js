@@ -11,7 +11,7 @@ var squareNum = [3, 6, 9];
 var index = 1;
 var colors = generateRandomColors(squareNum[index]);
 var pickedColor = pickColor();
-resetColor(9);
+resetColor(6);
 
 squares.forEach(function(square){
 	square.addEventListener("click",function(){
@@ -109,7 +109,13 @@ function resetColor(num){
 	pickedDisplay.textContent = pickedColor;
 	headerDisplay.style.backgroundColor = "steelblue";
 	for(var i = 0; i < squares.length; i++){
-	squares[i].style.backgroundColor = colors[i];	
+	squares[i].style.backgroundColor = colors[i];
+		if(!colors[i]){
+			squares[i].style.display = "none";
+		}
+		else{
+			squares[i].style.display = "block";
+		}	
 }
 }
 
