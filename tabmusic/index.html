@@ -5,18 +5,27 @@
 <!-- Load the Paper.js library -->
 <script type="text/javascript" src="js/paper.js"></script>
 <!-- Define inlined PaperScript associate it with myCanvas -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.0.15/howler.core.min.js"></script>
+<script type="text/javascript" src="js/data.js"></script>
 <script type="text/paperscript" canvas="myCanvas">
 	var circleAll = [];
 	function onKeyDown(event){
-		var point = new Point.random() * view.viewSize;
-		var circle = new Path.Circle(point, 200);
-		circle.fillColor = "red";
-		circleAll.push(circle);
+		if(data[event.key]){
+			data[event.key].sound.play();
+			var point = new Point.random() * view.viewSize;
+			var circle = new Path.Circle(point, 200);
+			circle.fillColor = data[event.key].color;
+			circleAll.push(circle);
+			
+		}
+		
+		
 	}
 
 	function onFrame(event) {
 		for(var i = 0; i < circleAll.length; i++){
 			circleAll[i].scale(0.9);
+			circleAll[i].fillColor.Hue += 1;
 		}
 	}
 </script>
