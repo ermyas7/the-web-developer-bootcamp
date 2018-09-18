@@ -1,0 +1,18 @@
+<style>
+    img{
+        width: 150px;
+    }
+</style>
+<h1> Movie search result</h1>
+
+<ul>
+    <% searchs.Search.forEach(function(result){ %>
+        <%= result.Title %>
+        <li>
+            <img src="<%=result.Poster%>" >
+        </li>
+        <%= result.Year %>
+    <%})%>
+</ul>
+
+<a href="/"> Search again</a>
