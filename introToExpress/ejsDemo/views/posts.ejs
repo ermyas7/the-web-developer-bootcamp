@@ -1,0 +1,9 @@
+<% include partials/header %>
+<h1>the NewYork Times</h1>
+<% posts.forEach(function(post){ %>
+    <h2> <%= post.title %> </h2>
+    <p> <%= post.body %> </p>
+    <h3> by <%= post.author %> </h3>
+<% }) %>
+
+<% include partials/footer %>

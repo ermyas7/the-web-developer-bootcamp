@@ -1,0 +1,12 @@
+<% include partials/header %>
+<h1>do you really love pets?</h1>
+<h3>are you really saying you love?</h3>
+<p> your pet choose is <%=pet.toUpperCase() %> </p>
+<% if(pet.toLowerCase() === "dog"){ %>
+    
+    <p>right choose awesome I also love <%= pet.toUpperCase() %></p>
+<% } else{ %>
+<p> Not  good choose</p>
+<% } %>
+
+<% include partials/footer %>

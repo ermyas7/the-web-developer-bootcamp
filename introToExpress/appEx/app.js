@@ -8,19 +8,17 @@ app.get('/', function(req, res){
 });
 
 app.get('/speak/:animal', function(req, res){
-   const animal = req.params.animal;
-   if(animal === "pig"){
-       res.send("the pig says 'Oink'");
+   const animal = req.params.animal.toLowerCase()
+   ;
+   const sound = {
+       pig: "Oink",
+       cow: "Moo",
+       dog: "Woof Woof"
+   };
+   if(sound[animal]){
+       res.send("the " + animal +" says '" + sound[animal] + "'");
    }
-   else if(animal === "cow"){
-       res.send("the cow says 'Moo'");
-   }
-   else if(animal === "dog"){
-        res.send("the dog says 'Woof Woof'");
-   }
-   else{
-       res.send("Sorry page is not found.... what are you doing with your life!");
-   }
+  res.send("Sorry page is not found.... what are you doing with your life!"); 
    
 });
 
