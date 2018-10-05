@@ -1,74 +1,29 @@
-const express = require("express");
-const app = express();
+// required dependances
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+const express = require("express");
+
+//app config
+const app = express();
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
-const campgrounds = [
-       {
-           name: "Semen Teraroch", 
-           image: "https://images.unsplash.com/photo-1534806826444-f55ae657104d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=bdabefd573b58ea516189a638a061d79&auto=format&fit=crop&w=667&q=80"
-       },
-       {
-           name: "Green leafed",
-           image: "https://images.unsplash.com/photo-1465695954255-a262b0f57b40?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=06d92f647a2937af54f658e199c3d990&auto=format&fit=crop&w=750&q=80"
-       },
-       {
-           name: "hawassa",
-           image: "https://images.unsplash.com/photo-1496425745709-5f9297566b46?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=b084690f83c5e63fafd161f8bc729a1f&auto=format&fit=crop&w=750&q=80"
-       },
-        {
-            name: "Tana",
-            image: "https://images.unsplash.com/photo-1479741044197-d28c298f8c77?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=00a8cfc7aba62bd47f10abd96551cb1d&auto=format&fit=crop&w=750&q=80"
-        },
-        {
-           name: "Semen Teraroch", 
-           image: "https://images.unsplash.com/photo-1534806826444-f55ae657104d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=bdabefd573b58ea516189a638a061d79&auto=format&fit=crop&w=667&q=80"
-       },
-       {
-           name: "Green leafed",
-           image: "https://images.unsplash.com/photo-1465695954255-a262b0f57b40?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=06d92f647a2937af54f658e199c3d990&auto=format&fit=crop&w=750&q=80"
-       },
-       {
-           name: "hawassa",
-           image: "https://images.unsplash.com/photo-1496425745709-5f9297566b46?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=b084690f83c5e63fafd161f8bc729a1f&auto=format&fit=crop&w=750&q=80"
-       },
-        {
-            name: "Tana",
-            image: "https://images.unsplash.com/photo-1479741044197-d28c298f8c77?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=00a8cfc7aba62bd47f10abd96551cb1d&auto=format&fit=crop&w=750&q=80"
-        },
-        {
-           name: "Semen Teraroch", 
-           image: "https://images.unsplash.com/photo-1534806826444-f55ae657104d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=bdabefd573b58ea516189a638a061d79&auto=format&fit=crop&w=667&q=80"
-       },
-       {
-           name: "Green leafed",
-           image: "https://images.unsplash.com/photo-1465695954255-a262b0f57b40?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=06d92f647a2937af54f658e199c3d990&auto=format&fit=crop&w=750&q=80"
-       },
-       {
-           name: "hawassa",
-           image: "https://images.unsplash.com/photo-1496425745709-5f9297566b46?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=b084690f83c5e63fafd161f8bc729a1f&auto=format&fit=crop&w=750&q=80"
-       },
-        {
-            name: "Tana",
-            image: "https://images.unsplash.com/photo-1479741044197-d28c298f8c77?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=00a8cfc7aba62bd47f10abd96551cb1d&auto=format&fit=crop&w=750&q=80"
-        },
-        {
-           name: "Semen Teraroch", 
-           image: "https://images.unsplash.com/photo-1534806826444-f55ae657104d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=bdabefd573b58ea516189a638a061d79&auto=format&fit=crop&w=667&q=80"
-       },
-       {
-           name: "Green leafed",
-           image: "https://images.unsplash.com/photo-1465695954255-a262b0f57b40?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=06d92f647a2937af54f658e199c3d990&auto=format&fit=crop&w=750&q=80"
-       },
-       {
-           name: "hawassa",
-           image: "https://images.unsplash.com/photo-1496425745709-5f9297566b46?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=b084690f83c5e63fafd161f8bc729a1f&auto=format&fit=crop&w=750&q=80"
-       },
-        {
-            name: "Tana",
-            image: "https://images.unsplash.com/photo-1479741044197-d28c298f8c77?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=00a8cfc7aba62bd47f10abd96551cb1d&auto=format&fit=crop&w=750&q=80"
-        }
-       ]; 
+
+//database config
+mongoose.connect("mongodb://localhost/yelp_camp");
+const campgroundSchema = mongoose.Schema({
+    name: String,
+    image: String,
+    description: String
+});
+
+//model
+const Campground = mongoose.model("campgrounds", campgroundSchema);
+
+// Campground.create({
+//     name: "tana",
+//     image: "https://images.unsplash.com/photo-1505735754789-3404132203ed?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8e0ef56213507ac99a507966ab9c5499&auto=format&fit=crop&w=500&q=60",
+//     description: "Tana is the biggest campground in Oklahama area, It have got beautiful trees, flowers, bathroom and the best air condition"
+// });
 app.get("/", function(req, res){
    res.render("landing"); 
 });
@@ -76,15 +31,41 @@ app.get("/", function(req, res){
 app.post("/campgrounds", function(req, res){
     const name = req.body.name;
     const image = req.body.img;
-    campgrounds.push({name: name, image: image});
-    res.redirect("/campgrounds");
+    const desc = req.body.desc;
+    const newCamp = {name: name, image: image, description: desc};
+    Campground.create(
+        newCamp
+            , function(err, campground){
+                if(err){
+                    console.log(err);
+                }else{
+                res.redirect("/campgrounds");
+                }
+    });
 });
 app.get("/campgrounds", function(req, res){
-   
-       res.render("campgrounds", {campgrounds: campgrounds});
+        Campground.find({}, function(err, allCampgrounds){
+            if(err){
+                console.log(err);
+            }else{
+                res.render("index", {campgrounds: allCampgrounds});  
+            }
+        });
 });
 app.get("/campgrounds/new", function(req, res){
    res.render("new"); 
 });
+
+app.get("/campgrounds/:id", function(req, res){
+    const id = req.params.id;
+    Campground.find({_id: id}, function(err, campground){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("show", {campground: campground});
+        }
+    });
+})
 
 app.listen(process.env.PORT,()=>console.log("server running!"));
