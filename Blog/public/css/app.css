@@ -1,3 +1,10 @@
-i.icon{
+i.code{
     font-size: 2em;
+}
+.blog {
+    margin-top: 7em;
+}
+
+.delete{
+    display: inline;
 }

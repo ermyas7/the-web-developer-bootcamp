@@ -1,11 +1,15 @@
 <% include ./partials/header %>
-<div>
+<div class="ui container">
     <% blogs.forEach(function(blog){%>
         <h2> <%= blog.title %></h2>
         <img src="<%=blog.image%>">
-        <span> <%= blog.created %></span>
-        <p> <%=blog.body%></p>
-    <%})%>    
+        <span> <%= blog.created.toDateString() %></span>
+        <p> <%=blog.body.substring(0, 100)%>....</p>
+        <form action="blogs/<%=blog._id%>" method="GET">
+            <button class="ui blue button">See More</button>
+        </form>
+        
+    <%})%>
 </div>
 
 <% include ./partials/footer %>

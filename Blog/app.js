@@ -1,6 +1,7 @@
 //import all the dependances
 const bodyParser = require("body-parser"),
       mongoose   = require("mongoose"),
+      methodOveride = require("method-override"),
       express    = require("express");
       
 //set up and config app
@@ -9,6 +10,7 @@ const app = express();
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(methodOveride("_method"));
 
 //connect and config database
 
@@ -22,21 +24,10 @@ const blogSchema = mongoose.Schema({
     });
 //app model    
 const Blog = mongoose.model('blog', blogSchema);
-//  Blog.create({
-//      title: "Focus",
-//     image: "https://images.unsplash.com/photo-1501644898242-cfea317d7faf?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=29b956ae2e9f82ad472a030fac347ca1&auto=format&fit=crop&w=500&q=60",
-//      body: 
-//             "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
-            
-//  }, function(err, blog){
-//      if(err){
-//         console.log(err);
-//     }
-//     else{
-//         console.log(blog);
-//     }
-// });
 
+app.get("/", function(req, res){
+   res.redirect("/blogs"); 
+});
 //index route
 app.get("/blogs", function(req, res){
     Blog.find({}, function(err, blogs){
@@ -49,8 +40,69 @@ app.get("/blogs", function(req, res){
     });
 });
 
-app.get("/", function(req, res){
-   res.redirect("/blogs"); 
+//new router
+app.get("/blogs/new",function(req, res){
+    res.render("new");
+})
+
+//create router
+app.post("/blogs", function(req, res){
+    Blog.create(req.body.blog, function(err, blog){
+        if(err){
+            res.redirect("/blogs/new");
+        }
+        else{
+            res.redirect("/blogs");
+        }
+    });
+});
+
+//show router
+app.get("/blogs/:id", function(req, res){
+    Blog.findById(req.params.id, function(err, foundBlog){
+        if(err){
+            res.redirect("/blogs");
+        }
+        else{
+            res.render("show", {blog: foundBlog});
+        }
+    });
+});
+
+//edit router
+app.get("/blogs/:id/edit", function(req, res) {
+    
+   Blog.findById(req.params.id, function(err, foundBlog){
+        if(err){
+            res.redirect("/blogs/:id/edit");
+        }
+        else{
+            res.render("edit", {blog: foundBlog});
+        }
+    }); 
+});
+
+//update router
+app.put("/blogs/:id", function(req, res){
+    Blog.findByIdAndUpdate(req.params.id, req.body.blog, function(err, updatedBlog){
+        if(err){
+            res.redirect("/blogs/:id/edit");
+        }
+        else{
+            res.redirect("/blogs/:id");
+        }
+    });    
+});
+//delete router
+app.delete("/blogs/:id", function(req, res){
+    Blog.findByIdAndRemove(req.params.id, function(err){
+        if(err){
+            res.redirect("/blogs/:id");
+        }
+        else{
+            res.redirect("/blogs");
+        }
+    });
 });
 
 //start listening the server
