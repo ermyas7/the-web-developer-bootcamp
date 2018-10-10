@@ -1,7 +1,10 @@
-// required dependances
-const bodyParser = require("body-parser");
-const mongoose = require("mongoose");
-const express = require("express");
+// dependances
+const bodyParser = require("body-parser"),
+mongoose = require("mongoose"),
+Campground = require("./models/campgrounds"),
+Comment = require("./models/comments"),
+seedDB = require("./seeds"),
+express = require("express");
 
 //app config
 const app = express();
@@ -9,21 +12,9 @@ app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
 
 //database config
-mongoose.connect("mongodb://localhost/yelp_camp");
-const campgroundSchema = mongoose.Schema({
-    name: String,
-    image: String,
-    description: String
-});
+mongoose.connect("mongodb://localhost/yelp_camp", { useNewUrlParser: true });
 
-//model
-const Campground = mongoose.model("campgrounds", campgroundSchema);
-
-// Campground.create({
-//     name: "tana",
-//     image: "https://images.unsplash.com/photo-1505735754789-3404132203ed?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8e0ef56213507ac99a507966ab9c5499&auto=format&fit=crop&w=500&q=60",
-//     description: "Tana is the biggest campground in Oklahama area, It have got beautiful trees, flowers, bathroom and the best air condition"
-// });
+seedDB();
 app.get("/", function(req, res){
    res.render("landing"); 
 });
@@ -48,24 +39,65 @@ app.get("/campgrounds", function(req, res){
             if(err){
                 console.log(err);
             }else{
-                res.render("index", {campgrounds: allCampgrounds});  
+                res.render("campgrounds/index", {campgrounds: allCampgrounds});  
             }
         });
 });
 app.get("/campgrounds/new", function(req, res){
-   res.render("new"); 
+   res.render("campgrounds/new"); 
 });
 
 app.get("/campgrounds/:id", function(req, res){
     const id = req.params.id;
-    Campground.find({_id: id}, function(err, campground){
+    Campground.findById({_id: id}).populate("comments").exec(function(err, campground){
         if(err){
             console.log(err);
         }
         else{
-            res.render("show", {campground: campground});
+            res.render("campgrounds/show", {campground: campground});
         }
     });
-})
+});
 
+//###########################################
+// comment route                             //
+//###########################################
+
+//add comment route
+app.get("/campgrounds/:id/comment/new", function(req, res){
+    Campground.findById(req.params.id, function(err, foundCampground){
+       if(err){
+           res.redirect("/campgrounds");
+       } 
+       else{
+           res.render("comments/new", {campground: foundCampground});
+       }
+    });
+});
+
+//create comment route
+app.post("/campgrounds/:id/comment", function(req, res){
+    Comment.create(req.body.comment, function(err, comment){
+        if(err){
+           res.redirect("/campgrounds/" + req.params.id + "comments/new"); 
+        }
+        else{
+            Campground.findById(req.params.id, (err, foundCampground)=>{
+               if(err){
+                   console.log("error");
+               }
+               foundCampground.comments.push(comment);
+               foundCampground.save((err)=>{
+                   if(err){
+                       res.redirect("/campgrounds/"+ req.params.id + "/comment/new");
+                   }
+                   else{
+                       console.log("comment posted");
+                       res.redirect("/campgrounds/"+ req.params.id);
+                   }
+               })
+            });
+        }
+    });
+});
 app.listen(process.env.PORT,()=>console.log("server running!"));
