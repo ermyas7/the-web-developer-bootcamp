@@ -44,7 +44,7 @@ app.get("/", function(req, res){
    res.render("landing"); 
 });
 
-app.post("/campgrounds", function(req, res){
+app.post("/campgrounds",isLoggedIn, function(req, res){
     const name = req.body.name;
     const image = req.body.img;
     const desc = req.body.desc;
@@ -68,7 +68,7 @@ app.get("/campgrounds", function(req, res){
             }
         });
 });
-app.get("/campgrounds/new", function(req, res){
+app.get("/campgrounds/new",isLoggedIn, function(req, res){
    res.render("campgrounds/new"); 
 });
 
@@ -89,7 +89,7 @@ app.get("/campgrounds/:id", function(req, res){
 //###########################################
 
 //add comment route
-app.get("/campgrounds/:id/comment/new", function(req, res){
+app.get("/campgrounds/:id/comment/new",isLoggedIn, function(req, res){
     Campground.findById(req.params.id, function(err, foundCampground){
        if(err){
            res.redirect("/campgrounds");
@@ -101,7 +101,7 @@ app.get("/campgrounds/:id/comment/new", function(req, res){
 });
 
 //create comment route
-app.post("/campgrounds/:id/comment", function(req, res){
+app.post("/campgrounds/:id/comment",isLoggedIn, function(req, res){
     Comment.create(req.body.comment, function(err, comment){
         if(err){
            res.redirect("/campgrounds/" + req.params.id + "comments/new"); 
@@ -165,5 +165,13 @@ app.get("/logout", function(req, res){
    req.logout();
    res.redirect("/campgrounds");
 });
+
+//middleware
+function isLoggedIn(req, res, next){
+    if(req.isAuthenticated()){
+        return next();
+    }
+    res.redirect("/login");
+}
 
 app.listen(process.env.PORT,()=>console.log("server running!"));
