@@ -40,7 +40,13 @@ passport.use(new LocalStrategy(User.authenticate()) );
 mongoose.connect("mongodb://localhost/yelp_camp", { useNewUrlParser: true });
 
 seedDB();
+//make user accessible globally for all route
+app.use(function(req, res, next){
+    res.locals.currentUser = req.user;
+    next();
+});
 app.get("/", function(req, res){
+   console.log(req.user);        
    res.render("landing"); 
 });
 
