@@ -1,10 +1,14 @@
 // dependances
-const bodyParser = require("body-parser"),
-mongoose = require("mongoose"),
-Campground = require("./models/campgrounds"),
-Comment = require("./models/comments"),
-seedDB = require("./seeds"),
-express = require("express");
+const bodyParser            = require("body-parser"),
+      mongoose              = require("mongoose"),
+      passport              = require("passport"),
+      LocalStrategy         = require("passport-local"),
+      passportLocalMongoose = require("passport-local-mongoose"),
+      Campground            = require("./models/campgrounds"),
+      Comment               = require("./models/comments"),
+      User                  = require("./models/user"),
+      seedDB                = require("./seeds"),
+      express               = require("express");
 
 //app config
 const app = express();
@@ -13,6 +17,25 @@ app.use(bodyParser.urlencoded({extended: true}));
 //serve public directory
 app.use(express.static(__dirname+"/public"));
 
+app.use(require("express-session")({
+    secret: "ohhh you are kidding right",
+    resave: false,
+    saveUninitialized: false
+}));
+
+//##########################################################
+//config passport
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+//encode and unencode session
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+passport.use(new LocalStrategy(User.authenticate()) );
+
+//#########################################################
 //database config
 mongoose.connect("mongodb://localhost/yelp_camp", { useNewUrlParser: true });
 
@@ -102,4 +125,28 @@ app.post("/campgrounds/:id/comment", function(req, res){
         }
     });
 });
+
+//#####################################
+// authenticate route
+//#####################################
+//register form
+app.get("/register", function(req, res){
+   res.render("register"); 
+});
+
+//register logic
+app.post("/register", function(req, res){
+    const newUser = {username: req.body.username};
+    User.register(new User(newUser), req.body.password, function(err, user){
+        if(err){
+            console.log(err);
+            return res.render("register");
+        }
+        //authenticate and let the user login
+        passport.authenticate("local")(req, res, function(){
+           res.redirect("/campgrounds"); 
+        });
+    });
+});
+
 app.listen(process.env.PORT,()=>console.log("server running!"));
