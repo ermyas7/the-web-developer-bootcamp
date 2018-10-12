@@ -23,6 +23,10 @@ router.post("/",isLoggedIn, function(req, res){
            res.redirect("/campgrounds/" + req.params.id + "comments/new"); 
         }
         else{
+            //add author to comment model
+            const author = {id: req.user._id, username: req.user.username};
+            comment.author = author;
+            comment.save();
             Campground.findById(req.params.id, (err, foundCampground)=>{
                if(err){
                    console.log("error");
