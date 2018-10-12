@@ -11,6 +11,7 @@ const bodyParser            = require("body-parser"),
       Comment               = require("./models/comment"),
       User                  = require("./models/user"),
       seedDB                = require("./seeds"),
+      methodOverride        = require("method-override"),
       express               = require("express");
 
 //app config
@@ -20,6 +21,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 //serve public directory
 app.use(express.static(__dirname+"/public"));
 
+app.use(methodOverride("_method"));
 
 app.use(require("express-session")({
     secret: "ohhh you are kidding right",

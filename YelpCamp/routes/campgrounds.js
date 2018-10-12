@@ -3,7 +3,7 @@ const express = require("express"),
 
 const router = express.Router();
 
-//new campground form
+//new campground 
 router.get("/new",isLoggedIn, function(req, res){
    res.render("campgrounds/new"); 
 });
@@ -36,8 +36,7 @@ router.get("", function(req, res){
 
 // show campground
 router.get("/:id", function(req, res){
-    const id = req.params.id;
-    Campground.findById({_id: id}).populate("comments").exec(function(err, campground){
+    Campground.findById(req.params.id).populate("comments").exec(function(err, campground){
         if(err){
             console.log(err);
         }
@@ -45,6 +44,44 @@ router.get("/:id", function(req, res){
             res.render("campgrounds/show", {campground: campground});
         }
     });
+});
+
+//edit campground
+router.get("/:id/edit", function(req, res){
+    Campground.findById(req.params.id, function(err, foundCampground){
+        if(err){
+            res.redirect("/campgrounds");
+        }
+        else{
+            res.render("campgrounds/edit", {campground: foundCampground});
+        }
+    });
+});
+
+//update comment
+router.put("/:id", function(req, res){
+   Campground.findByIdAndUpdate(req.params.id, req.body.campground, function(err, updatedCampground){
+      if(err){
+          console.log(err);
+          res.redirect("/campgrounds");
+      } 
+      else{
+          res.redirect("/campgrounds/" + req.params.id );
+      }
+   });
+});
+
+//delete comment
+router.delete("/:id", function(req, res){
+   Campground.findByIdAndRemove(req.params.id, function(err){
+      if(err){
+          console.log(err);
+          res.redirect("/campgrounds");
+      } 
+      else{
+          res.redirect("/campgrounds");
+      }
+   });
 });
 
 //middleware
