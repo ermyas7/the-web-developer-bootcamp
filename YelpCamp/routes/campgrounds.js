@@ -3,11 +3,15 @@ const express = require("express"),
 
 const router = express.Router();
 
+//new campground form
+router.get("/new",isLoggedIn, function(req, res){
+   res.render("campgrounds/new"); 
+});
+
+//create campground
 router.post("/",isLoggedIn, function(req, res){
-    const name = req.body.name;
-    const image = req.body.img;
-    const desc = req.body.desc;
-    const newCamp = {name: name, image: image, description: desc};
+    const user = {id: req.user._id, username: req.user.username};
+    const newCamp = {name: req.body.name, image: req.body.img, description: req.body.desc, author: user};
     Campground.create(
         newCamp
             , function(err, campground){
@@ -18,6 +22,8 @@ router.post("/",isLoggedIn, function(req, res){
                 }
     });
 });
+
+//all campgrounds
 router.get("", function(req, res){
         Campground.find({}, function(err, allCampgrounds){
             if(err){
@@ -27,10 +33,8 @@ router.get("", function(req, res){
             }
         });
 });
-router.get("/new",isLoggedIn, function(req, res){
-   res.render("campgrounds/new"); 
-});
 
+// show campground
 router.get("/:id", function(req, res){
     const id = req.params.id;
     Campground.findById({_id: id}).populate("comments").exec(function(err, campground){
