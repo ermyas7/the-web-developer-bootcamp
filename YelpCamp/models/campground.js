@@ -1,5 +1,5 @@
 const mongoose = require("mongoose"),
-Comment = require("./comments");
+Comment = require("./comment");
 
 const campgroundSchema = mongoose.Schema({
     name: String,

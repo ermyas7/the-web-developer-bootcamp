@@ -1,5 +1,5 @@
-const Comment = require("./models/comments"),
-Campground = require("./models/campgrounds");
+const Comment = require("./models/comment"),
+Campground = require("./models/campground");
 
  const data = [
            {
@@ -23,47 +23,47 @@ module.exports = ()=>{
     //remove previous data
    Campground.remove({}, function(err){
        if(err){
-           console.log(err);
+          console.log(err);
        } 
-       else{
-           console.log("removed!");
-           Comment.remove({}, function(err) {
-            if(err){
-                console.log(err);
-            }
-            console.log("removed comments!");
-       });
+//       else{
+//           console.log("removed!");
+//           Comment.remove({}, function(err) {
+//             if(err){
+//                 console.log(err);
+//             }
+//             console.log("removed comments!");
+//       });
        
-       }
+//       }
        
-   });
-           //add hardcoded data to database
-           data.forEach((campground)=>{
-               //enter each camp to database
-              Campground.create(campground, function(err, newCampground){
-                 if(err){
-                     console.log(err);
-                 } 
-                 else{
-                     //add comment for each camp
-                     Comment.create({author: "Homer", text:"I love it here"}, function(err, comment){
-                        if(err){
-                            console.log(err);
-                        } 
-                        else{
-                            newCampground.comments.push(comment);
-                            newCampground.save((err)=>{
-                                if(err){
-                                    console.log(err);
-                                }
-                                else{
-                                 console.log("created");   
-                                }
-                                });
-                        }
-                     });
-                 }
-              }); 
-           });
+//   });
+//           //add hardcoded data to database
+//           data.forEach((campground)=>{
+//               //enter each camp to database
+//               Campground.create(campground, function(err, newCampground){
+//                  if(err){
+//                      console.log(err);
+//                  } 
+//                  else{
+//                      //add comment for each camp
+//                      Comment.create({author: "Homer", text:"I love it here"}, function(err, comment){
+//                         if(err){
+//                             console.log(err);
+//                         } 
+//                         else{
+//                             newCampground.comments.push(comment);
+//                             newCampground.save((err)=>{
+//                                 if(err){
+//                                     console.log(err);
+//                                 }
+//                                 else{
+//                                  console.log("created");   
+//                                 }
+//                                 });
+//                         }
+//                      });
+//                  }
+//               }); 
+    });
 };
    
