@@ -47,41 +47,39 @@ router.get("/:id", function(req, res){
 });
 
 //edit campground
-router.get("/:id/edit", function(req, res){
+router.get("/:id/edit",checkCampgroundOwnership,function(req, res){
     Campground.findById(req.params.id, function(err, foundCampground){
         if(err){
-            res.redirect("/campgrounds");
+            console.log(err);
         }
         else{
-            res.render("campgrounds/edit", {campground: foundCampground});
-        }
+           res.render("campgrounds/edit", {campground: foundCampground}); 
+            }
+    });
+});    
+
+//update comment
+router.put("/:id", checkCampgroundOwnership, function(req, res){
+   Campground.findByIdAndUpdate(req.params.id, req.body.campground, function(err, updatedCampground){
+       if(err){
+           console.log(err);
+       }
+       else{
+          res.redirect("/campgrounds/" + req.params.id );
+       }
     });
 });
 
-//update comment
-router.put("/:id", function(req, res){
-   Campground.findByIdAndUpdate(req.params.id, req.body.campground, function(err, updatedCampground){
-      if(err){
-          console.log(err);
-          res.redirect("/campgrounds");
-      } 
-      else{
-          res.redirect("/campgrounds/" + req.params.id );
-      }
-   });
-});
-
 //delete comment
-router.delete("/:id", function(req, res){
+router.delete("/:id",checkCampgroundOwnership, function(req, res){
    Campground.findByIdAndRemove(req.params.id, function(err){
-      if(err){
-          console.log(err);
-          res.redirect("/campgrounds");
-      } 
-      else{
-          res.redirect("/campgrounds");
-      }
-   });
+    if(err){
+        console.log(err);
+    } 
+    else{
+        res.redirect("/campgrounds");
+        }
+    });
 });
 
 //middleware
@@ -90,6 +88,30 @@ function isLoggedIn(req, res, next){
         return next();
     }
     res.redirect("/login");
+}
+
+function checkCampgroundOwnership(req, res, next){
+    if(req.user){
+        Campground.findById(req.params.id, function(err, foundCampground){
+           if(err){
+               console.log(err);
+           }
+           else{
+               if(foundCampground.author.id.equals(req.user._id)){
+                   next();
+               }
+               else{
+                   console.log("you have no permission");
+                   res.redirect("back");
+               }
+           }
+        });
+    
+    }
+    else{
+        console.log("login please");
+        res.redirect("back");
+    }
 }
 
 module.exports = router;
