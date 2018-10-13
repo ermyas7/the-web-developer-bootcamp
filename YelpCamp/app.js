@@ -51,7 +51,7 @@ app.use(function(req, res, next){
     res.locals.currentUser = req.user;
     next();
 });
-//make params available for all routes
+//use middleware
 
 
 //use imported routers
