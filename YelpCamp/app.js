@@ -4,6 +4,7 @@ const bodyParser            = require("body-parser"),
       passport              = require("passport"),
       LocalStrategy         = require("passport-local"),
       passportLocalMongoose = require("passport-local-mongoose"),
+      flash                 = require("connect-flash"),
       campgroundRouter      = require("./routes/campgrounds"),
       commentRouter         = require("./routes/comments"),
       indexRouter           = require("./routes/index"),
@@ -29,6 +30,7 @@ app.use(require("express-session")({
     saveUninitialized: false
 }));
 
+app.use(flash());
 //##########################################################
 //config passport
 
@@ -49,6 +51,8 @@ mongoose.connect("mongodb://localhost/yelp_camp", { useNewUrlParser: true });
 //make user accessible globally for all route
 app.use(function(req, res, next){
     res.locals.currentUser = req.user;
+    res.locals.success     = req.flash("success");
+    res.locals.error         = req.flash("err");
     next();
 });
 //use middleware

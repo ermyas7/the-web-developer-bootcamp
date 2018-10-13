@@ -1,5 +1,6 @@
 const express   = require("express"),
       passport  = require("passport"),
+      flash     = require("connect-flash"),
       User      = require("../models/user");
 
 const router = express.Router();
@@ -18,7 +19,7 @@ router.post("/register", function(req, res){
     const newUser = {username: req.body.username};
     User.register(new User(newUser), req.body.password, function(err, user){
         if(err){
-            console.log(err);
+            req.flash("err", err.message);
             return res.render("register");
         }
         //authenticate and let the user login
@@ -34,14 +35,20 @@ router.get("/login", function(req, res){
 });
 
 //login logic
-router.post("/login", passport.authenticate("local",{
- successRedirect: "/campgrounds",
- failureRedirect: "/login"
-}));
+router.post("/login", function (req, res, next) {
+  passport.authenticate("local",
+    {
+      successRedirect: "/campgrounds",
+      failureRedirect: "/login",
+      failureFlash:  true,
+      successFlash: "Welcome to YelpCamp, " + req.body.username + "!"
+    })(req, res);
+});
 
 //logout logic
 router.get("/logout", function(req, res){
    req.logout();
+   req.flash("success", "successfully logged out");
    res.redirect("/campgrounds");
 });
 
