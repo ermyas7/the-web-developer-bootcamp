@@ -101,7 +101,6 @@ function checkCampgroundOwnership(req, res, next){
                    next();
                }
                else{
-                   console.log("you have no permission");
                    res.redirect("back");
                }
            }
@@ -109,7 +108,6 @@ function checkCampgroundOwnership(req, res, next){
     
     }
     else{
-        console.log("login please");
         res.redirect("back");
     }
 }
