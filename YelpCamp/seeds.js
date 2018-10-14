@@ -1,5 +1,6 @@
-const Comment = require("./models/comment"),
-Campground = require("./models/campground");
+const Comment    = require("./models/comment"),
+      Campground = require("./models/campground"),
+      User       = require("./models/user");
 
  const data = [
            {
@@ -65,5 +66,12 @@ module.exports = ()=>{
 //                  }
 //               }); 
     });
+    User.remove({}, function(err){
+     if(err){
+        console.log(err);
+     }
+     console.log("user removed");
+    })
+    Comment.remove({});
 };
    

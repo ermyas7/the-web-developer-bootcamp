@@ -19,7 +19,7 @@ router.post("/register", function(req, res){
     const newUser = {username: req.body.username};
     User.register(new User(newUser), req.body.password, function(err, user){
         if(err){
-            req.flash("err", err.message);
+            req.flash("error", err.message);
             return res.render("register");
         }
         //authenticate and let the user login
@@ -40,7 +40,7 @@ router.post("/login", function (req, res, next) {
     {
       successRedirect: "/campgrounds",
       failureRedirect: "/login",
-      failureFlash:  true,
+      failureFlash:  "Invalid Username or password",
       successFlash: "Welcome to YelpCamp, " + req.body.username + "!"
     })(req, res);
 });
@@ -51,13 +51,5 @@ router.get("/logout", function(req, res){
    req.flash("success", "successfully logged out");
    res.redirect("/campgrounds");
 });
-
-//middleware
-function isLoggedIn(req, res, next){
-    if(req.isAuthenticated()){
-        return next();
-    }
-    res.redirect("/login");
-}
 
 module.exports = router;
